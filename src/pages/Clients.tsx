@@ -4,16 +4,25 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClientCard from "@/components/ClientCard";
 import { mockClients } from "@/data/mockData";
-import { GoalType } from "@/types";
+import { GoalType, Client } from "@/types";
 import { useState } from "react";
 import { PlusCircle, Search } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AddClientForm from "@/components/AddClientForm";
 
 const Clients = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGoalType, setSelectedGoalType] = useState<string | null>(null);
+  const [clients, setClients] = useState<Client[]>(mockClients);
+  const [isAddingClient, setIsAddingClient] = useState(false);
 
   // Filter clients based on search query and goal type
-  const filteredClients = mockClients.filter(client => {
+  const filteredClients = clients.filter(client => {
     const fullName = `${client.firstName} ${client.lastName}`.toLowerCase();
     const matchesSearch = searchQuery === "" || 
       fullName.includes(searchQuery.toLowerCase()) || 
@@ -28,6 +37,12 @@ const Clients = () => {
   // Get unique goal types from clients
   const goalTypes = Object.values(GoalType);
 
+  // Handle new client addition
+  const handleAddClient = (newClient: Client) => {
+    setClients([...clients, newClient]);
+    setIsAddingClient(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -35,7 +50,7 @@ const Clients = () => {
           <h1 className="text-2xl font-bold tracking-tight">Clients</h1>
           <p className="text-muted-foreground">Manage your client profiles and progress.</p>
         </div>
-        <Button>
+        <Button onClick={() => setIsAddingClient(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Add New Client
         </Button>
@@ -99,6 +114,19 @@ const Clients = () => {
           </div>
         )}
       </div>
+
+      {/* Add Client Dialog */}
+      <Dialog open={isAddingClient} onOpenChange={setIsAddingClient}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Client</DialogTitle>
+          </DialogHeader>
+          <AddClientForm 
+            onSuccess={handleAddClient} 
+            onCancel={() => setIsAddingClient(false)} 
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
