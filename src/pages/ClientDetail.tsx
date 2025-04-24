@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { mockClients } from "@/data/mockData";
 import { format } from "date-fns";
@@ -23,7 +22,7 @@ import {
   ChevronLeft,
   Edit,
   FileText,
-  Diet,
+  Utensils,
   CalendarCheck
 } from "lucide-react";
 import { goalStatusColors, goalTypeColors } from "@/data/mockData";
@@ -236,7 +235,7 @@ const ClientDetail = () => {
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-center">
                   <CardTitle className="flex items-center">
-                    <Diet className="mr-2 h-5 w-5" /> Diet Plan
+                    <Utensils className="mr-2 h-5 w-5" /> Diet Plan
                   </CardTitle>
                   <Button variant="outline" size="sm">
                     <Edit className="h-4 w-4" />

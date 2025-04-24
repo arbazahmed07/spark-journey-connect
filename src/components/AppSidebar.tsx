@@ -11,7 +11,7 @@ import {
   SidebarHeader
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
-import { Users, User, FileText, Diet, Clock } from "lucide-react";
+import { Users, User, FileText, Utensils, Clock } from "lucide-react";
 
 const AppSidebar = () => {
   // Menu items for the sidebar
@@ -29,7 +29,7 @@ const AppSidebar = () => {
     {
       title: "Diet Plans",
       url: "/diet-plans",
-      icon: Diet
+      icon: Utensils
     },
     {
       title: "Workout Plans",
