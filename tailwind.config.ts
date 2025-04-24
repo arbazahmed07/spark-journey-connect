@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// GymSpark specific colors
+				gymspark: {
+					primary: '#3B82F6',    // Blue
+					secondary: '#0EA5E9',  // Teal
+					success: '#10B981',    // Green
+					warning: '#F59E0B',    // Amber
+					danger: '#EF4444',     // Red
+					gray: '#6B7280'        // Gray
 				}
 			},
 			borderRadius: {
