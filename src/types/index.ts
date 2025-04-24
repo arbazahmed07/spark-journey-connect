@@ -72,6 +72,16 @@ export interface WorkoutPlan {
   }>;
 }
 
+export interface CheckIn {
+  id: string;
+  clientId: string;
+  clientName: string;
+  date: Date;
+  status: "scheduled" | "completed" | "cancelled";
+  notes?: string;
+  duration: number; // minutes
+}
+
 export interface Client {
   id: string;
   firstName: string;
