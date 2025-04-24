@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { mockClients } from "@/data/mockData";
 import { format } from "date-fns";
@@ -25,12 +27,23 @@ import {
   Utensils,
   CalendarCheck
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { goalStatusColors, goalTypeColors } from "@/data/mockData";
 import ProgressChart from "@/components/ProgressChart";
+import EditClientForm from "@/components/EditClientForm";
+import ScheduleCheckInForm from "@/components/ScheduleCheckInForm";
+import { Client, CheckIn } from "@/types";
+import { toast } from "sonner";
 
 const ClientDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const client = mockClients.find(client => client.id === id);
+  const [client, setClient] = useState(() => {
+    const foundClient = mockClients.find(client => client.id === id);
+    if (!foundClient) return null;
+    return foundClient;
+  });
+  const [isEditingClient, setIsEditingClient] = useState(false);
+  const [isSchedulingCheckIn, setIsSchedulingCheckIn] = useState(false);
 
   if (!client) {
     return (
@@ -47,6 +60,19 @@ const ClientDetail = () => {
     );
   }
 
+  const handleUpdateClient = (updatedClient: Client) => {
+    setClient(updatedClient);
+    setIsEditingClient(false);
+  };
+
+  const handleScheduleCheckIn = (newCheckIn: CheckIn) => {
+    setClient({
+      ...client,
+      nextCheckIn: newCheckIn.date
+    });
+    setIsSchedulingCheckIn(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -60,11 +86,11 @@ const ClientDetail = () => {
           <h1 className="text-2xl font-bold tracking-tight">{client.firstName} {client.lastName}</h1>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setIsEditingClient(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit Client
           </Button>
-          <Button>
+          <Button onClick={() => setIsSchedulingCheckIn(true)}>
             <CalendarCheck className="mr-2 h-4 w-4" />
             Schedule Check-In
           </Button>
@@ -389,6 +415,34 @@ const ClientDetail = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* Edit Client Dialog */}
+      <Dialog open={isEditingClient} onOpenChange={setIsEditingClient}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Client</DialogTitle>
+          </DialogHeader>
+          <EditClientForm
+            client={client}
+            onSuccess={handleUpdateClient}
+            onCancel={() => setIsEditingClient(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Schedule Check-In Dialog */}
+      <Dialog open={isSchedulingCheckIn} onOpenChange={setIsSchedulingCheckIn}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Schedule Check-In</DialogTitle>
+          </DialogHeader>
+          <ScheduleCheckInForm
+            client={client}
+            onSuccess={handleScheduleCheckIn}
+            onCancel={() => setIsSchedulingCheckIn(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
