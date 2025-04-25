@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { mockClients } from "@/data/mockData";
@@ -20,7 +19,7 @@ import {
   CalendarDays, 
   Ruler, 
   Weight,
-  Goal,
+  Goal as GoalIcon,
   ChevronLeft,
   Edit,
   FileText,
@@ -205,7 +204,7 @@ const ClientDetail = () => {
                   <CardDescription>Client's fitness objectives</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => setIsAddingGoal(true)}>
-                  <Goal className="mr-2 h-4 w-4" />
+                  <GoalIcon className="mr-2 h-4 w-4" />
                   Add Goal
                 </Button>
               </div>
@@ -267,7 +266,7 @@ const ClientDetail = () => {
                 </div>
               ) : (
                 <div className="text-center py-6 text-gray-500">
-                  <Goal className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+                  <GoalIcon className="h-12 w-12 mx-auto text-gray-300 mb-2" />
                   <h3 className="text-lg font-medium mb-1">No goals set</h3>
                   <p className="text-sm">Add goals to track this client's progress</p>
                 </div>

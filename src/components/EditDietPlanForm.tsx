@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,7 +52,6 @@ interface EditDietPlanFormProps {
 const EditDietPlanForm = ({ client, onSuccess, onCancel }: EditDietPlanFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Use existing diet plan or create a default one
   const existingDietPlan = client.dietPlan;
   
   const defaultValues: DietPlanFormValues = existingDietPlan ? {
@@ -107,10 +105,13 @@ const EditDietPlanForm = ({ client, onSuccess, onCancel }: EditDietPlanFormProps
     setIsSubmitting(true);
     
     try {
-      // In a real app, we would make an API call here
       const updatedDietPlan: DietPlan = {
         id: existingDietPlan?.id || `diet-${Date.now()}`,
-        ...data,
+        name: data.name,
+        description: data.description,
+        dailyCalories: data.dailyCalories,
+        macros: data.macros,
+        meals: data.meals,
       };
       
       setTimeout(() => {
