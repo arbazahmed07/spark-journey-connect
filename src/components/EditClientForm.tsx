@@ -22,8 +22,8 @@ const clientFormSchema = z.object({
   lastName: z.string().min(1, { message: "Last name is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().optional(),
-  height: z.string().optional().transform(val => val ? Number(val) : undefined),
-  currentWeight: z.string().optional().transform(val => val ? Number(val) : undefined),
+  height: z.string().optional(),
+  currentWeight: z.string().optional(),
   notes: z.string().optional(),
 });
 

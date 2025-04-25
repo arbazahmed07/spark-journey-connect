@@ -27,12 +27,14 @@ import {
   Utensils,
   CalendarCheck
 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { goalStatusColors, goalTypeColors } from "@/data/mockData";
 import ProgressChart from "@/components/ProgressChart";
 import EditClientForm from "@/components/EditClientForm";
 import ScheduleCheckInForm from "@/components/ScheduleCheckInForm";
-import { Client, CheckIn } from "@/types";
+import AddGoalForm from "@/components/AddGoalForm";
+import EditDietPlanForm from "@/components/EditDietPlanForm";
+import { Client, CheckIn, Goal, DietPlan } from "@/types";
 import { toast } from "sonner";
 
 const ClientDetail = () => {
@@ -44,6 +46,8 @@ const ClientDetail = () => {
   });
   const [isEditingClient, setIsEditingClient] = useState(false);
   const [isSchedulingCheckIn, setIsSchedulingCheckIn] = useState(false);
+  const [isAddingGoal, setIsAddingGoal] = useState(false);
+  const [isEditingDietPlan, setIsEditingDietPlan] = useState(false);
 
   if (!client) {
     return (
@@ -71,6 +75,22 @@ const ClientDetail = () => {
       nextCheckIn: newCheckIn.date
     });
     setIsSchedulingCheckIn(false);
+  };
+
+  const handleAddGoal = (newGoal: Goal) => {
+    setClient({
+      ...client,
+      goals: [...client.goals, newGoal]
+    });
+    setIsAddingGoal(false);
+  };
+
+  const handleUpdateDietPlan = (updatedDietPlan: DietPlan) => {
+    setClient({
+      ...client,
+      dietPlan: updatedDietPlan
+    });
+    setIsEditingDietPlan(false);
   };
 
   return (
@@ -184,7 +204,7 @@ const ClientDetail = () => {
                   <CardTitle>Goals</CardTitle>
                   <CardDescription>Client's fitness objectives</CardDescription>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => setIsAddingGoal(true)}>
                   <Goal className="mr-2 h-4 w-4" />
                   Add Goal
                 </Button>
@@ -263,7 +283,7 @@ const ClientDetail = () => {
                   <CardTitle className="flex items-center">
                     <Utensils className="mr-2 h-5 w-5" /> Diet Plan
                   </CardTitle>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => setIsEditingDietPlan(true)}>
                     <Edit className="h-4 w-4" />
                   </Button>
                 </div>
@@ -301,7 +321,7 @@ const ClientDetail = () => {
                 ) : (
                   <div className="text-center py-4 text-gray-500">
                     <p>No diet plan assigned</p>
-                    <Button variant="outline" size="sm" className="mt-2">
+                    <Button variant="outline" size="sm" className="mt-2" onClick={() => setIsEditingDietPlan(true)}>
                       Assign Diet Plan
                     </Button>
                   </div>
@@ -421,6 +441,7 @@ const ClientDetail = () => {
         <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Client</DialogTitle>
+            <DialogDescription>Make changes to client information below.</DialogDescription>
           </DialogHeader>
           <EditClientForm
             client={client}
@@ -435,11 +456,44 @@ const ClientDetail = () => {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Schedule Check-In</DialogTitle>
+            <DialogDescription>Set a date for the next check-in with this client.</DialogDescription>
           </DialogHeader>
           <ScheduleCheckInForm
             client={client}
             onSuccess={handleScheduleCheckIn}
             onCancel={() => setIsSchedulingCheckIn(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Goal Dialog */}
+      <Dialog open={isAddingGoal} onOpenChange={setIsAddingGoal}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Goal</DialogTitle>
+            <DialogDescription>Create a new fitness goal for this client.</DialogDescription>
+          </DialogHeader>
+          <AddGoalForm
+            client={client}
+            onSuccess={handleAddGoal}
+            onCancel={() => setIsAddingGoal(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Diet Plan Dialog */}
+      <Dialog open={isEditingDietPlan} onOpenChange={setIsEditingDietPlan}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{client.dietPlan ? "Edit Diet Plan" : "Create Diet Plan"}</DialogTitle>
+            <DialogDescription>
+              {client.dietPlan ? "Make changes to this client's diet plan." : "Create a new diet plan for this client."}
+            </DialogDescription>
+          </DialogHeader>
+          <EditDietPlanForm
+            client={client}
+            onSuccess={handleUpdateDietPlan}
+            onCancel={() => setIsEditingDietPlan(false)}
           />
         </DialogContent>
       </Dialog>
